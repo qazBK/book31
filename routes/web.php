@@ -24,6 +24,8 @@ Route::post('/loginSend', [AuthController::class, 'loginSend'])
     Route::post('/books/{book}/edit', [BookController::class,'update'])
         ->name('books.update');
 
+    Route::get('/books/{book}/show', [BookController::class,'show'])
+        ->name('books.show');
 
 
 

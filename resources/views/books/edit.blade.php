@@ -8,7 +8,7 @@
             <h2 class="mb-4">Изменить книгу</h2>
             <form action="{{route('books.update',$book)}}" method="post" id="updateBook"  enctype="multipart/form-data">
                 @csrf
-                @include('books._form');-
+                @include('books._form')
 
 
                 <button type="submit" class="btn btn-success">Опубликовать</button>
