@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\panel\BookRequest;
+use App\Models\Book;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -12,7 +14,9 @@ class BookController extends Controller
      */
     public function index()
     {
-        return view('books.index');
+        return view('books.index',[
+            'books'=> Book::all(),
+        ]);
     }
 
     /**
@@ -20,15 +24,31 @@ class BookController extends Controller
      */
     public function create()
     {
-        //
+        return view('books.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(BookRequest $request)
     {
-        //
+        // Получаем валидированные данные
+        $validated = $request->validated();
+
+        // Удаляем images из validated
+        unset($validated['images']);
+
+
+        $book = Book::query()->create($validated);
+
+        // Обрабатываем изображения
+        if ($request->hasFile('images')) {
+            $book->updateImages($request->file('images'));
+        }
+
+        return redirect()
+            ->route('admin-panel')
+            -> withInput($request->validated());
     }
 
     /**
@@ -42,24 +62,39 @@ class BookController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Book $book)
     {
-        //
+        return view('books.edit',compact('book'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Book $book,BookRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        // Удаляем images из validated
+        unset($validated['images']);
+
+        $book->update($validated);
+
+
+        if ($request->hasFile('images')) {
+            $book->updateImages($request->file('images'));
+        }
+
+        return redirect()
+            -> route('admin-panel');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Book $book)
     {
-        //
+        $book-> delete();
+        return redirect()
+            -> route('admin-panel');
     }
 }

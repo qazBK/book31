@@ -11,6 +11,7 @@
                 @enderror
                 <form action="{{route('login.send')}}" method="post" id="loginForm">
                     @csrf
+
                     <div class="mb-3">
                         <label>Email</label>
                         <input type="email" class="form-control @error('email') is-invalid @enderror"

@@ -17,7 +17,7 @@ class AuthController extends Controller
 
     public function loginSend(AuthRequest $request)
     {
-        return 44;
+
         if (auth()->attempt($request->only('email', 'password') + ['is_admin' => true])) {
             return redirect()->route('admin-panel');
         }
@@ -27,5 +27,13 @@ class AuthController extends Controller
                 'status' => 'Неверный email, пароль или отсутствует права администратора'
             ]);
 
+    }
+
+    public function logout()
+    {
+        //$this->logout()
+        auth()->logout();
+
+        return redirect()->route('login');
     }
 }
